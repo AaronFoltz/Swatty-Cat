@@ -11,6 +11,10 @@ var play_state = {
         this.birds = game.add.group();
         this.birds.createMultiple(20, 'bird');
 
+        this.birds.forEach(function(bird){
+            bird.body.totalY = 0;
+        });
+
         // Call the 'jump' function when the spacekey is hit
         var space_key = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         space_key.onDown.add(this.swat, this);
@@ -28,6 +32,35 @@ var play_state = {
 		// Function called 60 times per second
 
         this.game.physics.overlap(this.paw, this.birds, this.hit_bird, null, this);
+
+        console.log("ALIVE: " + this.birds.countLiving());
+        this.birds.forEachAlive(function(bird) {
+            console.log(bird.body.deltaY());
+            console.log(bird.body.totalY);
+
+            // Capture movement since last step
+            bird.body.totalY += bird.body.deltaY();
+
+            // It hasn't started falling
+            if (bird.body.totalY == 0)
+            {
+                if (bird.body.x > Math.random() * (200 - 0) + 0)
+                {
+                        bird.body.gravity.y = 1000;
+                }
+            }
+            // It has started falling, should we make it jump back up?
+            else
+            {
+                if (bird.body.deltaY() > Math.random() * (10 - 5) + 5)
+                {
+                        bird.body.velocity.y = -350;
+                }
+            }
+
+        }, this);
+
+
 
         // if (this.bird.angle < 20)
         //     this.bird.angle += 1;
@@ -69,7 +102,7 @@ var play_state = {
         bird.body.velocity.x = 200;
 
         // Add gravity to the bird to make it fall
-        // this.bird.body.gravity.y = 1000;
+        //
 
         // Anchor point for the animation
         bird.anchor.setTo(-0.2, 0.5);
