@@ -2,11 +2,7 @@
 var play_state = {
     create: function() {
         // Cat
-        this.cat = this.game.add.sprite(100, 235, 'cat');
-
-        // Cat's Paw
-        this.paw = this.game.add.sprite(310, 350, 'paw');
-        this.paw.angle = 20;
+        this.grumpycat = this.game.add.sprite(350, 0, 'grumpycat');
 
         this.birds = game.add.group();
         this.birds.createMultiple(20, 'bird');
@@ -35,11 +31,14 @@ var play_state = {
 
         console.log("ALIVE: " + this.birds.countLiving());
         this.birds.forEachAlive(function(bird) {
-            console.log(bird.body.deltaY());
-            console.log(bird.body.totalY);
-
             // Capture movement since last step
             bird.body.totalY += bird.body.deltaY();
+
+            console.log(bird.angle);
+            if (bird.angle < 20)
+            {
+                bird.angle += 1;
+            }
 
             // It hasn't started falling
             if (bird.body.totalY == 0)
@@ -55,15 +54,13 @@ var play_state = {
                 if (bird.body.deltaY() > Math.random() * (10 - 5) + 5)
                 {
                         bird.body.velocity.y = -350;
+
+                        // Rotate upward when jumping
+                        this.game.add.tween(bird).to({angle: -20}, 100).start();
                 }
             }
 
         }, this);
-
-
-
-        // if (this.bird.angle < 20)
-        //     this.bird.angle += 1;
     },
 
     // Swat the flappy birds
@@ -74,8 +71,7 @@ var play_state = {
         // Add a vertical velocity to the bird
         this.bird.body.velocity.y = -350;
 
-        // Rotate upward when jumping
-        this.game.add.tween(this.bird).to({angle: -20}, 100).start();
+
 
     },
 
