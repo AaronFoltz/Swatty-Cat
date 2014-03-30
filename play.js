@@ -8,14 +8,8 @@ var play_state = {
         this.paw = this.game.add.sprite(310, 350, 'paw');
         this.paw.angle = 20;
 
-        // Add gravity to the bird to make it fall
-        // this.bird.body.gravity.y = 1000;
-
-        // Anchor point for the animation
-        // this.bird.anchor.setTo(-0.2, 0.5);
-
-        // this.birds = game.add.group();
-        // this.birds.createMultiple(20, 'bird');
+        this.birds = game.add.group();
+        this.birds.createMultiple(20, 'bird');
 
         // Call the 'jump' function when the spacekey is hit
         var space_key = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -62,29 +56,30 @@ var play_state = {
     },
 
     add_one_bird: function(x, y) {
-        // Get the first dead pipe of our group
-        var pipe = this.pipes.getFirstDead();
+        // Get the first dead bird of our group
+        var bird = this.birds.getFirstDead();
 
         // Set the new position of the pipe
-        pipe.reset(x, y);
+        bird.reset(x, y);
+
+        if (bird.angle < 20)
+            bird.angle += 1;
 
         // Add velocity to the pipe to make it move left
-        pipe.body.velocity.x = -200;
+        bird.body.velocity.x = 200;
+
+        // Add gravity to the bird to make it fall
+        // this.bird.body.gravity.y = 1000;
+
+        // Anchor point for the animation
+        bird.anchor.setTo(-0.2, 0.5);
 
         // Kill the pipe when it's no longer visible
-        pipe.outOfBoundsKill = true;
+        bird.outOfBoundsKill = true;
     },
 
     send_bird: function() {
-        // Random entry point for the bird
-        var entryY = return Math.random() * (300 - 100) + 100;
-
-        score += 1;
-        this.label_score.content = score;
-
-        for (var i = 0; i < 8; i++)
-            if (i != hole && i != hole +1)
-                this.add_one_bird(400, i*60+10);
+        this.add_one_bird(0, Math.random() * (250 - 100) + 100);
     },
 
     hit_bird: function() {
