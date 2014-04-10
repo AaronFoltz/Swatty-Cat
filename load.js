@@ -7,6 +7,7 @@ var load_state = {
         this.game.load.image('cat', 'assets/cat.png');
         this.game.load.image('paw', 'assets/paw.png');
         this.game.load.image('grumpycat', 'assets/grumpycat.png');
+        this.game.load.image('bullet', 'assets/bullet.png');
 
     },
 
